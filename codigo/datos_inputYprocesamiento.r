@@ -26,7 +26,7 @@ library(stringr)
 
 # IMPORTAR DATOS: FEMENINO (xlsx)
 ## Hoja 1 = "FEM PARTIDOS", Desde fila 5 a fila 459, todo como char
-datos_fem <- read_excel("HISTORIALES SELECCIONES ADULTAS.xlsx",
+datos_fem <- read_excel("datos/HISTORIALES SELECCIONES ADULTAS.xlsx",
                         sheet = "FEM PARTIDOS", skip = 4, col_types = "text", n_max = 455)
 
 # LIMPIEZA
@@ -53,6 +53,9 @@ datos_fem <- datos_fem %>%
 datos_fem <- datos_fem %>%
   filter(!is.na(goles_arg) | !is.na(goles_adv))
 ## Cambiar formato fecha dd/mm/aaaa a aaaa-mm-dd cuando corresponda
+### Si la fecha tiene letras o ¿ o ?: elimino
+datos_fem <- datos_fem %>%
+  filter(!str_detect(fecha, "[a-zA-Z¿?]"))
 ### Si 'fecha' vino como serial/float convertir a Date
 datos_fem <- datos_fem %>%
   mutate(
@@ -85,7 +88,8 @@ datos_fem <- datos_fem |>
   mutate(
     torneo = ifelse(str_detect(torneo, "amistoso|Amistoso|AMISTOSO|test|TEST|Test|exhibición|Exhibición|EXHIBICIÓN"),
                     "Amistoso",
-                    torneo)
+                    torneo),
+    amistoso = ifelse(torneo == "Amistoso", TRUE, FALSE)
   )
 ## Creo columna para tipo de adversario
 datos_fem <- datos_fem |>
@@ -98,16 +102,19 @@ datos_fem <- datos_fem |>
 
 
 # IMPORTAR DATOS MASCULINOS (xlsx)
-datos_masc <- read_excel("HISTORIALES SELECCIONES ADULTAS.xlsx",
+datos_masc <- read_excel("datos/HISTORIALES SELECCIONES ADULTAS.xlsx",
                           sheet = "MASC PARTIDOS", skip = 5, col_types = "text", n_max = 608)
 # tail(datos_masc)
 ## Nombre de columnas
 colnames(datos_masc) <- c("id", "fecha", "lugar", "goles_arg", "goles_adv", "adversario", "tipo_partido", "observaciones", "torneo")
 ## Filas de encabezados: id no numérico
-filter(datos_masc, !str_detect(id, "^[0-9.]+$")) |> select(id) # Me quedo con las filas a partir del segundo #
+# filter(datos_masc, !str_detect(id, "^[0-9.]+$")) |> select(id) # Me quedo con las filas a partir del segundo #
 filas_filtrar <- which(datos_masc$id == "#")
 datos_masc <- datos_masc[-(1:filas_filtrar[2]), ]
 ## Cambiar formato fecha dd/mm/aaaa a aaaa-mm-dd cuando corresponda
+### Si la fecha tiene letras o ¿ o ?: elimino
+datos_masc <- datos_masc %>%
+  filter(!str_detect(fecha, "[a-zA-Z¿?]"))
 ### Si 'fecha' vino como serial/float convertir a Date
 datos_masc <- datos_masc %>%
   mutate(
@@ -121,12 +128,12 @@ datos_masc <- datos_masc %>%
 ### Las fechas con "/" tienen formato mm/dd/aaaa: pasar a aaaa-mm-dd. Las demas tienen formato yyyy-dd-mm: pasar a aaaa-mm-dd
 datos_masc <- datos_masc |>
   mutate(
-    fecha_aux = ifelse(str_detect(as.character(fecha), pattern = "/"),
-                       format(as.Date(as.character(fecha), format = "%m/%d/%Y"), "%Y-%m-%d"),
-                    format(as.Date(as.character(fecha), format = "%Y-%d-%m"), "%Y-%m-%d")
+    fecha_aux = ifelse(str_detect(as.character(fecha), pattern = "/") & !str_detect(as.character(fecha), pattern = "-"),
+                    format(as.Date(as.character(fecha), format = "%m/%d/%Y"), "%Y-%m-%d"),
+                    fecha
                     )
     )
-# datos_masc[,c("fecha_aux", "fecha")] |> head(10)
+
 datos_masc <- datos_masc |>
   mutate(fecha = fecha_aux) |>
   select(-fecha_aux)
@@ -151,6 +158,7 @@ datos_masc <- datos_masc %>%
 # datos_fem |> filter(is.na(goles_arg) | is.na(goles_adv)) |> head(10)
 datos_masc <- datos_masc %>%
   filter(!is.na(goles_arg) | !is.na(goles_adv))
+datos_masc[is.na(datos_masc$fecha),] |> head(10)
 
 # ACOMODAR DATOS
 # print(datos_masc[, c("adversario","tipo_partido")], n= 50)
@@ -161,7 +169,8 @@ datos_masc <- datos_masc |>
   mutate(
     torneo = ifelse(str_detect(torneo, "amistoso|Amistoso|AMISTOSO|test|TEST|Test|exhibición|Exhibición|EXHIBICIÓN"),
                     "Amistoso",
-                    torneo)
+                    torneo),
+    amistoso = ifelse(torneo == "Amistoso", TRUE, FALSE)
   )
 ## Creo columna para tipo de adversario
 datos_masc <- datos_masc |>
@@ -245,3 +254,6 @@ resumen_ambasRamas <- resumen_ambasRamas %>%
 print("Generacion de:")
 print("1. Dataframes de datos: datos_fem, datos_masc")
 print("2  Dataframes de resumenes: resumen_fem, resumen_masc, resumen_ambasRamas")
+
+
+datos_masc

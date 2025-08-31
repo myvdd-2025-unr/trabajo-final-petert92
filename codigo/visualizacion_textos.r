@@ -1,3 +1,5 @@
+library(shiny)
+
 intro_texto <- HTML("
 <p>Se presenta un análisis de los datos de las selecciones nacionales de handball de Argentina, con un enfoque en la visualización, como entrega final de la materia Manejo y Visualización de Datos de la Maestría en Estadística Aplicada de la Facultad de Ciencias Económicas y Estadísticas de la Universidad Nacional de Rosario.</p>
 <p>El objetivo es utilizar diversas herramientas aprendidas de visualizaciones a través del análisis de los datos.</p>

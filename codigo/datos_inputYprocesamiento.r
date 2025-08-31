@@ -254,6 +254,3 @@ resumen_ambasRamas <- resumen_ambasRamas %>%
 print("Generacion de:")
 print("1. Dataframes de datos: datos_fem, datos_masc")
 print("2  Dataframes de resumenes: resumen_fem, resumen_masc, resumen_ambasRamas")
-
-
-datos_masc

@@ -25,18 +25,18 @@
 # Deshabilitar warnings de sintaxis
 # nolint start
 
+library(tidyverse)
+library(stringr)
+library(shiny)
+# library(shinythemes)
+library(bslib)
+
 # Import datos preprocesados
 source("codigo/datos_inputYprocesamiento.r")
 # Importar textos
 source("codigo/visualizacion_textos.r")
 # Importar funciones de visualizacion
 source("codigo/visualizacion_funciones.r")
-
-library(tidyverse)
-library(stringr)
-library(shiny)
-library(shinythemes)
-library(bslib)
 
 # Working directory
 # setwd("ruta/al/directorio")
@@ -49,12 +49,12 @@ path_logoARH <- "logo_arh.png"
 # Interfaz de usuario
 ui <- fluidPage(
     # theme = shinytheme("flatly"),
-    # theme = bs_theme(
-    #     version = 4,
-    #     bootswatch = "cosmo", # Opciones: cerulean, cosmo, cyborg, darkly, flatly, journal, litera, lumen, paper, readable, sandstone, simplex, slate, spacelab, superhero, united
-    #     primary = "#007bff",
-    #     base_font = font_google("Inter")
-    # ),
+    theme = bs_theme(
+        version = 4,
+        bootswatch = "journal", # Opciones: cerulean, .cosmo, !cyborg, !darkly, .flatly, journal, litera, lumen, paper, readable, sandstone, simplex, slate, !spacelab, !superhero, united
+        primary = "#98aceeff",
+        base_font = font_google("Inter")
+    ),
     # Titulo principal (constante)
     tags$div("Análisis de Datos de Selecciones Nacionales de Handball", style = "text-align: center; font-size: 21px;font-weight: bold;"),
     tags$div("Historial de partidos de las selecciones mayores femenina y masculina de handball argentinas. - TP Manejo y visualización de datos",
@@ -82,7 +82,7 @@ ui <- fluidPage(
         }
     "))),
     # Contenido tabs
-    tabsetPanel(  id = "mainTabs",
+    tabsetPanel(id = "mainTabs",
         tabPanel("Introducción"
                 , tags$div(intro_texto, # Texto incial
                           style = "text-align: justify; text-justify: inter-word; font-size: 14px; margin-top: 20px; width: 80%; margin-left: auto; margin-right: auto;")
@@ -212,9 +212,9 @@ ui <- fluidPage(
                         hr(),
                         tags$div("Resumen de partidos", style = "font-weight: bold; text-align: center; margin-bottom: 8px;"),
                         # CSS local para poner en negrita la última fila de la tabla
-                        tags$style(HTML("#fem_resumenTabla table tr:last-child td { font-weight: bold; }")),
+                        tags$style(HTML("#masc_resumenTabla table tr:last-child td { font-weight: bold; }")),
                         div(style = "width:100%; display:flex; justify-content:center;",
-                            tableOutput("fem_resumenTabla")
+                            tableOutput("masc_resumenTabla")
                         )
                     )
                 ),
@@ -320,6 +320,3 @@ server <- function(input, output) {
 
 # App Shiny
 shinyApp(ui = ui, server = server)
-
-
-datos_masc

@@ -7,6 +7,8 @@
 
 # Funciones para visualizaciones #
 
+# Deshabilitar warnings de sintaxis
+# nolint start
 
 # imports
 library(tidyverse)
@@ -34,25 +36,31 @@ crear_grafico_evolucion_por_anio <- function(datos, opcion = c("ganados", "empat
     datos$.resultado <- factor(datos$.resultado, levels = niveles)
 
     resumen <- datos %>%
-        group_by(anio, .resultado) %>%
-        summarise(cantidad = n(), .groups = "drop")
-    datos[is.na(datos$anio), ] 
+        count(anio, .resultado, name = "cantidad") %>%
+        group_by(anio) %>%
+        mutate(cantidad = cantidad / sum(cantidad) *100) %>%
+        ungroup()
+    # datos[is.na(datos$anio), ]
     if (opcion != "todos") {
         resumen <- resumen %>% filter(.resultado == opcion)
         titulo <- paste0("Partidos ", opcion, " por año")
-        p <- ggplot(resumen, aes(x = anio, y = cantidad)) +
-            geom_point(size = 3) +
+        p <- ggplot(resumen, aes(x = anio, y = cantidad, 
+                                     text = paste("Año:", anio,
+                                                  "\nCantidad:", cantidad))) +
+            geom_point(size = 2) +
             geom_line(group = 1) +
             labs(title = titulo, x = "Año", y = "Cantidad de partidos") +
             theme_bw() +
             theme(axis.text.x = element_text(angle = 45, hjust = 1))
     } else {
-        titulo <- "Partidos por año (por resultado)"
-        p <- ggplot(resumen, aes(x = anio, y = cantidad, color = .resultado, shape = .resultado)) +
-            geom_point(size = 3, position = position_dodge(width = 0.4)) +
+        titulo <- "% Partidos por año por resultado"
+        p <- ggplot(resumen, aes(x = anio, y = cantidad, color = .resultado, shape = .resultado, 
+                                    text = paste("Año:", anio, "\nResultado:", .resultado, "\nPorcentaje:", cantidad)
+                                )) +
+            geom_point(size = 2, position = position_dodge(width = 0.4)) +
             geom_line(aes(group = .resultado), na.rm = TRUE) +
             scale_color_brewer(palette = "Set1", na.value = "grey") +
-            labs(title = titulo, x = "Año", y = "Cantidad de partidos", color = "Resultado", shape = "Resultado") +
+            labs(title = titulo, x = "Año", y = "% Partidos", color = "Resultado", shape = "Resultado") +
             theme_bw() +
             theme(axis.text.x = element_text(angle = 45, hjust = 1))
     }
@@ -62,11 +70,8 @@ crear_grafico_evolucion_por_anio <- function(datos, opcion = c("ganados", "empat
         breaks = seq(min(resumen$anio, na.rm = TRUE), max(resumen$anio, na.rm = TRUE), by = 5)
     ) +
     scale_y_continuous(
-        limits = c(
-            0,
-            ifelse(is.finite(max(resumen$cantidad, na.rm = TRUE)), ceiling(max(resumen$cantidad, na.rm = TRUE))+1, 1)
-        ),
-        breaks = function(limits) seq(0, ceiling(limits[2]), by = 2),
+        limits = c(0,100+1),
+        breaks = function(limits) seq(0, ceiling(limits[2]), by = 10),
         expand = c(0, 0)
     )
 }

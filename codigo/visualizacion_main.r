@@ -45,7 +45,6 @@ source("codigo/visualizacion_funciones.r")
 # Datos generales
 fecha_inicio_fem <- resumen_ambasRamas[resumen_ambasRamas$rama == "Femenino", "min_fecha"]
 fecha_inicio_masc <- resumen_ambasRamas[resumen_ambasRamas$rama == "Masculino", "min_fecha"]
-path_logoCAH <- "logo_cah_2.png"
 
 # Interfaz de usuario
 ui <- fluidPage(

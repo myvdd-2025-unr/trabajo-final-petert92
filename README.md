@@ -6,10 +6,10 @@
 
 ## Historial de partidos de las selecciones argentinas de handball
 
-Se presenta un breve analisis del historial de partidos de las selecciones mayores femenina y masculina de handball de Argentina. Los datos se encuentran de manera abierta en la página oficial de la Confederación Argentina de Handball.
+Se presenta un breve análisis del historial de partidos de las selecciones mayores femenina y masculina de handball de Argentina. Los datos se encuentran de manera abierta en la página oficial de la Confederación Argentina de Handball.
 
 Para este trabajo práctico el enfoque está puesto en implementar herramientas de visualización más que en el análisis propiamente dicho.
-Se propuso implementar una Aplcación de Shiny que brinde una visualización dinámica e interactiva para los usuarios.
+Se propuso implementar una Aplicación de Shiny que brinde una visualización dinámica e interactiva para los usuarios.
 
 Origen datos: **https://docs.google.com/spreadsheets/d/1LActdHNtHUnGfaWI3B6-u94SYoaadJqYMJgGKyrIjwk/edit?gid=373917176#gid=373917176**
 

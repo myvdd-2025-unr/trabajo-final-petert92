@@ -38,6 +38,8 @@ source("codigo/datos_inputYprocesamiento.r")
 source("codigo/visualizacion_textos.r")
 # Importar funciones de visualizacion
 source("codigo/visualizacion_funciones.r")
+# Logo CAH
+# path_logoCAH <- "logo_cah.png"
 
 # Working directory
 # setwd("ruta/al/directorio")
@@ -91,12 +93,13 @@ ui <- fluidPage(
                 , tags$div(
                     tableOutput("intro_resumenTabla"),
                     style = "text-align: center; font-size: 16px; margin-top: 20px; width: 80%; margin-left: auto; margin-right: auto;"
-                ),
-                # Logo CAH  abajo a la izquierda
-                tags$div(
-                    style = "position: fixed; bottom: 8px; right: 8px; z-index: 1000;",
-                    tags$img(src = path_logoCAH, alt = "Logo CAH", style = "height:60px; max-width:120px;")
                 )
+                # ,
+                # # Logo CAH  abajo a la izquierda
+                # tags$div(
+                #     style = "position: fixed; bottom: 8px; right: 8px; z-index: 1000;",
+                #     tags$img(src = path_logoCAH, alt = "Logo CAH", style = "height:60px; max-width:120px;")
+                # )
         ),
 
         tabPanel("Selección femenina",
